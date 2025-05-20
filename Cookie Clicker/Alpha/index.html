@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cookie Clicker</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <script src="script.js"></script>
+    <div id="title">
+        <h1>Cookie Clicker by Ruben :D</h1> 
+    </div>
+    <section id="game_display"  onclick="compte()">
+        <div id="Div_Score"><p id="Score">0$</p></div>
+        <div id="ClicValue">Valeur de clic : 1</div>
+        <div id="CPS">Revenu Passif : 0</div>
+        <div id="CookieStatus">Cookie Actuel : Cookie Miteux</div>
+        <div>
+            <img src="assets/PerfectCookie.png" alt="Un cookie" id="cookie">
+        </div>
+        <section id="Achat">
+            <div class="IWannaDieHelpIHateDiv">
+                <h2>Améliorations passives</h2>
+                <div class="ameliorations">
+                    <button onclick="achatps(10, 0.1)">Four à chaleur +0.1$/s (10$)</button>
+                    <button onclick="achatps(100, 1)">Robot Patissier +1$/s (100$)</button>
+                    <button onclick="achatps(1000, 5)">Usine à cookies +5$/s (1000$)</button>
+                    <button onclick="achatps(10000, 25)">Mamie patissière +25$/s (10000$)</button>
+                </div>
+            </div>
+            <div class="IWannaDieHelpIHateDiv">
+                <h2>Amélioration du clic</h2>
+                <div class="ameliorations">
+                    <button onclick="achat(10, 0.1)">Toucher de soie +0.1$/clic (10$)</button>
+                    <button onclick="achat(100, 2)">Pétrissage de la pâte +2$/clic (100$)</button>
+                    <button onclick="achat(1500, 7)">Spatule +7$/clic (1500)</button>
+                    <button onclick="achat(10000, 25)">Recette secrète +25$/clic (10000$)</button>  
+                </div>
+            </div>
+            <div class="IWannaDieHelpIHateDiv">
+                <h2>Skin de Cookie</h2>
+                <div class="ameliorations">
+                    <button onclick="achatC(100000, 10, 1)">Cookie +10% (100k$)</button>
+                    <button onclick="achatC(1000000, 50, 2)">Cookie de bronze +50% (1M$)</button>
+                    <button onclick="achatC(10000000, 100, 3)">Cookie d'argent +100% (10M$)</button>
+                    <button onclick="achatC(1000000000, 1000, 4)">Cookie d'or +1000% (1Md$)</button>  
+                </div>
+            </div>
+        </section>
+    </section>
+
+    
+</body>
+</html>
