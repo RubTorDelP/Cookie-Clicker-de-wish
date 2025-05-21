@@ -16,6 +16,10 @@ let four_bonus = 0;
 let robot_bonus = 0;
 let usine_bonus = 0;
 let mamie_bonus = 0;
+let price_multiplicator = 1.024;
+let multiplicateurRevenus = 1;
+let reductionPrix = 1;
+let justRebirthed = false;
 
 
 
@@ -27,11 +31,7 @@ setInterval(() => {
     UpdateCPC();
     UpdateCPS();
     updateBoutons();
-    overall_cookiesP();
-    overall_cookies_calcul();
-    const pointsPotentiels = calculerCookiePointsPotentiels();
-    document.getElementById("cookiePointsPotentiels").innerText = "Cookie Point potentiels : " + pointsPotentiels;
-    document.getElementById("OverallCookieDisplay").innerText = "Cookie Totaux : " + formater(overall_cookies.toFixed(2))
+    
 }, 100);
 
 setInterval(() => {
@@ -39,6 +39,14 @@ setInterval(() => {
     console.log("Sauvegarde automatique effectuée !");
     document.getElementById("autosave").textContent = "Sauvegarde automatique à " + new Date().toLocaleTimeString();
 }, 30000);
+
+setInterval(() => {
+    overall_cookiesP();
+    overall_cookies_calcul();
+    const pointsPotentiels = calculerCookiePointsPotentiels();
+    document.getElementById("cookiePointsPotentiels").innerText = "Cookie Point potentiels : " + pointsPotentiels;
+    document.getElementById("OverallCookieDisplay").innerText = "Cookie Totaux : " + formater(overall_cookies.toFixed(2))
+}, 1000);
 
 
 
@@ -51,12 +59,16 @@ const Four = {
         return 0.1 * (four_bonus + 1 +(overall_boost/100));
     },
     valeurC: 15,
+     
+    UpdateC() {
+        this.valeurC = (15*(price_multiplicator**Four.n))*reductionPrix;
+    },
 
     achat() {
+        this.UpdateC()
         if (money >= this.valeurC) {
             this.n += 1;
             money -= this.valeurC;
-            this.valeurC = this.valeurC * 1.024;
             UpdateScore();
         }
     }
@@ -68,15 +80,19 @@ const Robot = {
         return 0.05 * (1+(overall_boost/100) + robot_bonus);
     },
     stock: 0,
-    valeur_a: 1000,
-    valeurC: 10000,
+    valeur_a: 50,
+    valeurC: 500,
+
+    UpdateC() {
+        this.valeurC = (500*(price_multiplicator**Robot.n))*reductionPrix;
+    },
 
     achat() {
+        this.UpdateC();
         if (Four.n >= this.valeur_a && money >= this.valeurC) {
             this.n += 1;
             money -= this.valeurC;
             Four.n -= this.valeur_a;
-            this.valeurC = this.valeurC * 1.024;
             UpdateScore();
         }
     },
@@ -90,7 +106,7 @@ const Robot = {
                 this.stock -= produite; 
             }
         } else if (this.n*this.P_a >= 1) {
-            Four.n += this.n*this.P_a;
+            Four.n += (this.n*this.P_a)/10;
         };
     }
 };
@@ -102,15 +118,19 @@ const Usine = {
         return 0.05 * (1+(overall_boost/100) + usine_bonus);
     },
     stock :0,
-    valeur_a: 100000,
+    valeur_a: 500,
     valeurC: 1000000,
 
+    UpdateC() {
+        (this.valeurC = 1000000*(price_multiplicator**Usine.n))*reductionPrix;
+    },
+
     achat() {
+        this.UpdateC();
         if (Robot.n >= this.valeur_a && money >= this.valeurC) {
             this.n += 1;
             money -= this.valeurC;
             Robot.n -= this.valeur_a;
-            this.valeurC = this.valeurC * 1.024;
             UpdateScore();
         }
     },
@@ -124,7 +144,7 @@ const Usine = {
                 this.stock -= produite; 
             }
         } else if (this.n*this.P_a >= 1) {
-            Robot.n += this.n*this.P_a;
+            Robot.n += (this.n*this.P_a)/10;
         }
     }
 };
@@ -135,15 +155,19 @@ const Mamie = {
         return 0.05 * (1+(overall_boost/100) + mamie_bonus);
     },
     stock: 0,
-    valeur_a: 100000000,
+    valeur_a: 5000,
     valeurC: 1000000000,
 
+    UpdateC() {
+        this.valeurC = (1000000000*(price_multiplicator**Mamie.n))*reductionPrix;
+    },
+
     achat() {
+        this.UpdateC();
         if (Usine.n >= this.valeur_a && money >= this.valeurC) {
             this.n += 1;
             money -= this.valeurC;
             Usine.n -= this.valeur_a;
-            this.valeurC = this.valeurC * 1.024;
             UpdateScore();
         }
     },
@@ -157,7 +181,7 @@ const Mamie = {
                 this.stock -= produite; 
             }
         } else if (this.n*this.P_a >= 1) {
-            Usine.n += this.n*this.P_a;
+            Usine.n += (this.n*this.P_a)/10;
         }
     }
 };
@@ -192,15 +216,51 @@ function formater(nombre){
         return (nombre/1000).toFixed(2) + "k"
     } else if (nombre>=1000000 && nombre<10**9){
         return (nombre/1000000).toFixed(2) + "M"
-    } else if (nombre>=10**9){
-        return (nombre/(10**9)).toFixed(2) + "Md"
+    } else if (nombre>=10**9 && nombre<10**12){
+        return (nombre/(10**9)).toFixed(2) + "B"
+    } else if (nombre>=10**12 && nombre<10**15){
+        return (nombre/(10**12)).toFixed(2) + "T"
+    } else if (nombre>=10**15 && nombre<10**18){
+        return (nombre/(10**15)).toFixed(2) + "Qa"
+    } else if (nombre>=10**18 && nombre<10**21){
+        return (nombre/(10**18)).toFixed(2) + "Qi"
+    } else if (nombre>=10**21 && nombre<10**24){
+        return (nombre/(10**21)).toFixed(2) + "Sx"
+    } else if (nombre>=10**24 && nombre<10**27){
+        return (nombre/(10**24)).toFixed(2) + "Sp"
+    } else if (nombre>=10**27 && nombre<10**30){
+        return (nombre/(10**27)).toFixed(2) + "Oc"
+    } else if (nombre>=10**30 && nombre<10**33){
+        return (nombre/(10**30)).toFixed(2) + "No"
+    } else if (nombre>=10**33 && nombre<10**36){
+        return (nombre/(10**33)).toFixed(2) + "Dc"
+    } else if (nombre>=10**36 && nombre<10**39){
+        return (nombre/(10**36)).toFixed(2) + "Ud"
+    } else if (nombre>=10**39 && nombre<10**42){
+        return (nombre/(10**39)).toFixed(2) + "Dd"
+    } else if (nombre>=10**42 && nombre<10**45){
+        return (nombre/(10**42)).toFixed(2) + "Td"
+    } else if (nombre>=10**45 && nombre<10**48){
+        return (nombre/(10**45)).toFixed(2) + "Qad"
+    } else if (nombre>=10**48 && nombre<10**51){
+        return (nombre/(10**48)).toFixed(2) + "Qid"
+    } else if (nombre>=10**51 && nombre<10**54){
+        return (nombre/(10**51)).toFixed(2) + "Sxd"
+    } else if (nombre>=10**54 && nombre<10**57){
+        return (nombre/(10**54)).toFixed(2) + "Spd"
+    } else if (nombre>=10**57 && nombre<10**60){
+        return (nombre/(10**57)).toFixed(2) + "Ocd"
+    }   else if (nombre>=10**60 && nombre<10**63){
+        return (nombre/(10**60)).toFixed(2) + "Nod"
     } else {
         return String(nombre)
     }
 }
 
+
+
 function CalculerRevenuPassif() {
-    Money_par_s = Four.n * Four.PC * (1+(overall_boost/100)); // Ajout du boost
+    Money_par_s = Four.n * Four.PC * (1+(overall_boost/100)) * multiplicateurRevenus; // Ajout du boost
 }
 
 
@@ -208,10 +268,15 @@ function ProductionAutomatique() {
     Mamie.prod();
     Usine.prod();
     Robot.prod();
+
+    Four.UpdateC();
+    Robot.UpdateC();
+    Usine.UpdateC();
+    Mamie.UpdateC();
 }
 
 function UpdateScore() {
-    let money_1_decimal = money.toFixed(2);
+    let money_1_decimal = formater(money.toFixed(2));
     document.getElementById("Score").innerText = money_1_decimal + "$";
 }
 
@@ -247,8 +312,9 @@ function OngletRebirth() {
     document.getElementById("OngletRebirth").style.display = "block";
     document.getElementById("OngletShop").style.display = "none";
     const pointsPotentiels = calculerCookiePointsPotentiels();
-    document.getElementById("cookiePointsPotentiels").innerText = "Cookie Point potentiels : " + pointsPotentiels;
+    document.getElementById("cookiePointsPotentiels").innerText = "Cookie Point potentiels : +" + pointsPotentiels;
     document.getElementById("OverallCookieDisplay").innerText = "Cookie Totaux : " + formater(overall_cookies.toFixed(2))
+    afficherAmeliorationsRebirth()
 
 }
 
@@ -275,11 +341,11 @@ function overall_cookiesClick(){
 }
 
 function CalculBoost(){
-    overall_boost = overall_Cookie_Point * 0.1;
+    overall_boost = overall_Cookie_Point;
 }
 
 function overall_cookies_calcul(){
-     overall_cookies = overall_cookiesClicks + overall_cookiesPa
+    overall_cookies = (overall_cookiesClicks/10 + overall_cookiesPa)*10
 }
 
 function calculerCookiePointsPotentiels() {
@@ -292,37 +358,131 @@ function Rebirth() {
     Cookie_point = calculerCookiePointsPotentiels();
     if (Cookie_point >= 1){
         overall_Cookie_Point += Cookie_point;
+        justRebirthed = true;
 
-        // Puis reset
+        // Calculer le boost avant d'appliquer
+        CalculBoost();
+
+        // Reset
         money = 0;
+        overall_cookies = 0;
         Rebirth_Counter += 1;
         four_bonus = 0;
         robot_bonus = 0;
         usine_bonus = 0;
         mamie_bonus = 0;
+        Money_par_s = 0;
+        overall_cookiesPa = 0;
         Four.n = 0;
         Four.valeurC = 15;
         Robot.n = 0;
         Robot.valeurC = 10000;
         Robot.stock = 0;
         Usine.n = 0;
-        Usine.valeurC = 1000000;
+        Usine.valeurC = 100000000;
         Usine.stock = 0;
         Mamie.n = 0;
-        Mamie.valeurC = 1000000000;
+        Mamie.valeurC = 1000000000000;
         Mamie.stock = 0;
-        overall_cookies = 0;
-        const pointsPotentiels = calculerCookiePointsPotentiels();
-        valeur_clic = valeur_clic*(1+(overall_boost/100))
-        document.getElementById("cookiePointsPotentiels").innerText = "Cookie Point potentiels : " + pointsPotentiels;
-        document.getElementById("OverallCookieDisplay").innerText = "Cookie Totaux : " + formater(overall_cookies.toFixed(2))
+
+        valeur_clic = 1 * (1 + overall_boost / 100);  // Reset valeur clic de base * boost
+        
+        // Mise à jour de l'affichage
+        UpdateCPC();
+        UpdateCPS();
+        UpdateScore();
+        updateBoutons();
+        overall_cookiesP();
+        overall_cookies_calcul();
+
+        document.getElementById("OverallCookieDisplay").innerText = "Cookie Totaux : " + formater(overall_cookies.toFixed(2));
         document.getElementById("cookiePoints").innerText = "Cookie Points : " + overall_Cookie_Point.toFixed(2);
+        document.getElementById("Prix").innerText = "1 Cookie Point : " + formater(Math.floor(1000 * (1.01 ** overall_Cookie_Point))) + " Cookies Totaux";
     } else {
-        confirm("Il faut au minimun 1 cookie point pour pouvoir Rebirth !")
+        confirm("Il faut au minimun 1 cookie point pour pouvoir Rebirth !");
     }
 
-    UpdateBoost()
+    UpdateBoost();
+    localStorage.clear();
+    afficherAmeliorationsRebirth();
+    sauvegarderPartie();
+    chargerPartie();
     
+}
+
+const ameliorationsRebirth = [
+    {
+        id: "boostClique",
+        nom: "Boost Clic",
+        niveau: 0,
+        niveauMax: 10,
+        baseCout: 10,
+        effet: () => {
+            valeur_clic *= 1.3;
+
+        },
+        description: "Augmente la valeur de clic de 30% par niveau"
+    },
+    {
+        id: "boostCPS",
+        nom: "Boost Revenu Passif",
+        niveau: 0,
+        niveauMax: 10,
+        baseCout: 15,
+        effet: () => {
+            multiplicateurRevenus *= 1.25;
+        },
+        description: "Augmente le revenu passif de 25% par niveau"
+    },
+    {
+        id: "reducPrix",
+        nom: "Réduction des prix",
+        niveau: 0,
+        niveauMax: 8,
+        baseCout: 25,
+        effet: () => {
+            reductionPrix *= 0.4;
+        },
+        description: "Réduit le prix des upgrades de 60% par niveau"
+    }
+];
+
+
+function afficherAmeliorationsRebirth() {
+    const container = document.getElementById("CookiePointShop");
+    container.innerHTML = "";
+
+    ameliorationsRebirth.forEach(amelioration => {
+        const coutActuel = amelioration.baseCout *5**amelioration.niveau;
+
+        const btn = document.createElement("button");
+        btn.textContent = `${amelioration.nom} (Niv ${amelioration.niveau}/${amelioration.niveauMax}) - ${coutActuel} CP`;
+        btn.disabled = (amelioration.niveau >= amelioration.niveauMax || Cookie_point < coutActuel);
+
+        btn.onclick = function () {
+            if (Cookie_point >= coutActuel && amelioration.niveau < amelioration.niveauMax) {
+                Cookie_point -= coutActuel;
+                amelioration.niveau++;
+                amelioration.effet();
+                updateCookiePointDisplay();
+                afficherAmeliorationsRebirth(); // Refresh
+            }
+        };
+
+        const description = document.createElement("p");
+        description.textContent = amelioration.description;
+
+        const bloc = document.createElement("div");
+        bloc.appendChild(btn);
+        bloc.appendChild(description);
+
+        container.appendChild(bloc);
+    });
+}
+
+
+function updateCookiePointDisplay() {
+    document.getElementById("cookiePoints").textContent = `Cookie Point : ${Cookie_point}`;
 }
 
 
@@ -352,6 +512,7 @@ function sauvegarderPartie() {
         usine_ValeurC: Usine.valeurC,
         mamie_n: Mamie.n,
         mamie_ValeurC: Mamie.valeurC,
+        niveauxRebirth: ameliorationsRebirth.map(a => a.niveau),
     };
 
     // Étape 2 : convertir en JSON
@@ -364,6 +525,8 @@ function sauvegarderPartie() {
 }
 
 function chargerPartie() {
+    if (justRebirthed) return;
+
     const sauvegardeJSON = localStorage.getItem("sauvegarde_cookie");
     if (!sauvegardeJSON) {
         console.log("Aucune sauvegarde trouvée.");
@@ -394,6 +557,14 @@ function chargerPartie() {
     Usine.n = sauvegarde.usine_n;
     Mamie.n = sauvegarde.mamie_n;
 
+    if (sauvegarde.niveauxRebirth) {
+        sauvegarde.niveauxRebirth.forEach((niveau, index) => {
+            ameliorationsRebirth[index].niveau = niveau;
+            for (let i = 0; i < niveau; i++) {
+                ameliorationsRebirth[index].effet();
+            }
+        });
+}
     console.log("Partie chargée !");
 }
 
@@ -406,14 +577,20 @@ function resetPartie() {
         money = 0;
         overall_boost = 0;
         Cookie_point = 0;
+        overall_Cookie_Point = 0;
         overall_cookies = 0;
         overall_cookiesClicks = 0;
         overall_cookiesPa = 0;
         Rebirth_Counter = 0;
+        valeur_clic = 1;
         four_bonus = 0;
         robot_bonus = 0;
         usine_bonus = 0;
         mamie_bonus = 0;
+        ameliorationsRebirth.forEach(am => {
+            am.niveau = 0;
+        });
+
 
         // Réinitialiser les objets
         Four.n = 0;
@@ -424,17 +601,19 @@ function resetPartie() {
         Robot.stock = 0;
 
         Usine.n = 0;
-        Usine.valeurC = 1000000;
+        Usine.valeurC = 100000000;
         Usine.stock = 0;
 
         Mamie.n = 0;
-        Mamie.valeurC = 1000000000;
+        Mamie.valeurC = 1000000000000;
         Mamie.stock = 0;
 
         // Mettre à jour l'affichage
         UpdateScore();
         UpdateCPS();
         UpdateCPC();
+            UpdateBoost();
+
     }
 }
 
