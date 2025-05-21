@@ -238,6 +238,7 @@ function RevenuPassif() {
 function OngletRebirth() {
     document.getElementById("OngletCookie").style.display = "none";
     document.getElementById("OngletRebirth").style.display = "block";
+    document.getElementById("OngletShop").style.display = "none";
 
     // Mise à jour des points potentiels
     const pointsPotentiels = calculerCookiePointsPotentiels();
@@ -249,8 +250,13 @@ function OngletCookie() {
     console.log("clic cookie");
     document.getElementById("OngletCookie").style.display = "block";
     document.getElementById("OngletRebirth").style.display = "none";
+    document.getElementById("OngletShop").style.display = "none";
 }
-
+function OngletShop(){
+    document.getElementById("OngletCookie").style.display = "none";
+    document.getElementById("OngletRebirth").style.display = "none";
+    document.getElementById("OngletShop").style.display = "block";
+}
 
 function overall_cookiesP(){
     overall_cookiesPa +=  Money_par_s
