@@ -14,8 +14,9 @@
         <button onclick="OngletRebirth()" style="background-color: rgb(86, 126, 160); color: rgb(86, 126, 160); padding: 5px; margin-top: -30px;">
             <img src="assets/Rebirth icon.png" alt="" style="height: 10dvh; width: auto;">
         </button>
-        
-        <button><img src="assets/Store-Icon.png" style="height: 10dvh; width: auto;"></button>
+        <button style="background-color: rgb(86, 126, 160); color: rgb(86, 126, 160); padding: 5px; margin-top: -30px;" onclick="OngletShop()">
+            <img src="assets/Store-Icon.png" style="height: 10dvh; width: auto;">
+        </button>
         <button style="background-color: rgb(86, 126, 160); color: rgb(86, 126, 160); padding: 5px;" onclick="sauvegarderPartie()">
             <img src="assets/save-icon.png" alt="" style="height: 7dvh; width: auto;">
         </button>
@@ -29,6 +30,7 @@
             <div id="ClicValue">Valeur de clic : 1</div>
             <div id="CPS">Revenu Passif : 0</div>
             <div id="CookieStatus">Cookie Actuel : Cookie Miteux</div>
+            <div id="boost">Boost Actuel : 0%</div>
             <div>
             </div>
 
@@ -51,9 +53,21 @@
     
     <div id="OngletRebirth" style="display: none;">
         <section id="game_display_rebirth">
-            <div>
-                <span id="cookiePoints">Cookie Point : 0</span>
-                <span id="cookiePointsPotentiels">Cookie Point potentiels : 0</span>
+            <div style="display: flex; flex-direction: column;">
+                <h1>1 Cookie Point = 1000 Cookie Totaux</h1>
+                <h2>1 Cookie Point = +1% bonus général</h2>
+                <div>
+                    <p id="OverallCookieDisplay">Cookie Totaux : 0</p>
+                </div>
+                <div>
+                   <p id="cookiePoints">Cookie Point : 0</p>
+                </div>
+                <div>
+                    <p id="cookiePointsPotentiels">Cookie Point potentiels : 0</p>
+                </div>
+                <div>
+                    <button onclick="Rebirth()">Rebirth</button>
+                </div>
             </div>
         </section>
     </div>
