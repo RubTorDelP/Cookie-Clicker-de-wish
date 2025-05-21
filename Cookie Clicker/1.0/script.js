@@ -4,7 +4,7 @@ let valeur_clic = 1;
 let money = 0;
 let Money_par_s = 0;
 
-let overall_boost = 1;
+let overall_boost = 0;
 let overall_cookies = 0;
 let overall_cookiesPa = 0;
 let overall_cookiesClicks = 0;
@@ -12,10 +12,10 @@ let Cookie_point = 0;
 let overall_Cookie_Point = 0;
 let Click_bonus = 0; 
 let Rebirth_Counter = 0;
-let four_bonus = 1;
-let robot_bonus = 1;
-let usine_bonus = 1;
-let mamie_bonus = 1;
+let four_bonus = 0;
+let robot_bonus = 0;
+let usine_bonus = 0;
+let mamie_bonus = 0;
 
 
 
@@ -29,6 +29,9 @@ setInterval(() => {
     updateBoutons();
     overall_cookiesP();
     overall_cookies_calcul();
+    const pointsPotentiels = calculerCookiePointsPotentiels();
+    document.getElementById("cookiePointsPotentiels").innerText = "Cookie Point potentiels : " + pointsPotentiels;
+    document.getElementById("OverallCookieDisplay").innerText = "Cookie Totaux : " + formater(overall_cookies.toFixed(2))
 }, 100);
 
 setInterval(() => {
@@ -45,7 +48,7 @@ setInterval(() => {
 const Four = {
     n: 0,
     get PC() {
-        return 0.1 * (four_bonus);
+        return 0.1 * (four_bonus + 1 +(overall_boost/100));
     },
     valeurC: 15,
 
@@ -62,7 +65,7 @@ const Four = {
 const Robot = {
     n: 0,
     get P_a() {
-        return 0.05 * (overall_boost + robot_bonus);
+        return 0.05 * (1+(overall_boost/100) + robot_bonus);
     },
     stock: 0,
     valeur_a: 1000,
@@ -96,7 +99,7 @@ const Robot = {
 const Usine = {
     n: 0,
     get P_a() {
-        return 0.05 * (overall_boost + usine_bonus);
+        return 0.05 * (1+(overall_boost/100) + usine_bonus);
     },
     stock :0,
     valeur_a: 100000,
@@ -129,7 +132,7 @@ const Usine = {
 const Mamie = {
     n: 0,
     get P_a() {
-        return 0.05 * (overall_boost + mamie_bonus);
+        return 0.05 * (1+(overall_boost/100) + mamie_bonus);
     },
     stock: 0,
     valeur_a: 100000000,
@@ -164,7 +167,7 @@ const Mamie = {
 function updateBoutons() {
     // Four
     document.getElementById("btnFour").innerHTML =
-        "Four à chaleur (" + formater(Four.n.toFixed(0)) + ")<br>+" + formater((Four.n*Four.PC*overall_boost).toFixed(2)) + "$/s<br>" + formater(Four.valeurC.toFixed(2)) + "$";
+        "Four à chaleur (" + formater(Four.n.toFixed(0)) + ")<br>+" + formater((Four.n*Four.PC).toFixed(2)) + "$/s<br>" + formater(Four.valeurC.toFixed(2)) + "$";
 
     // Robot
     document.getElementById("btnRobot").innerHTML =
@@ -197,7 +200,7 @@ function formater(nombre){
 }
 
 function CalculerRevenuPassif() {
-    Money_par_s = Four.n * Four.PC * overall_boost; // Ajout du boost
+    Money_par_s = Four.n * Four.PC * (1+(overall_boost/100)); // Ajout du boost
 }
 
 
@@ -217,14 +220,18 @@ function UpdateCPS() {
     document.getElementById("CPS").innerText = "Revenu Passif : " + CPS_1_decimal;
 }
 
+function UpdateBoost() {
+    document.getElementById("boost").innerText = "Boost Actuel : " + (overall_boost) + "%";
+
+}
+
 function UpdateCPC() {
-    let CPC_1_decimal = (valeur_clic* overall_boost/10).toFixed(1);
+    let CPC_1_decimal = (valeur_clic).toFixed(2);
     document.getElementById("ClicValue").innerText = "Valeur de clic : " + CPC_1_decimal;
 }
 
 function compte() {
-    money += valeur_clic * overall_boost/10;
-    overall_cookies += valeur_clic * overall_boost/10;
+    money += valeur_clic;
     overall_cookiesClick();
     UpdateScore();
 }
@@ -239,10 +246,10 @@ function OngletRebirth() {
     document.getElementById("OngletCookie").style.display = "none";
     document.getElementById("OngletRebirth").style.display = "block";
     document.getElementById("OngletShop").style.display = "none";
-
-    // Mise à jour des points potentiels
     const pointsPotentiels = calculerCookiePointsPotentiels();
     document.getElementById("cookiePointsPotentiels").innerText = "Cookie Point potentiels : " + pointsPotentiels;
+    document.getElementById("OverallCookieDisplay").innerText = "Cookie Totaux : " + formater(overall_cookies.toFixed(2))
+
 }
 
 
@@ -251,6 +258,7 @@ function OngletCookie() {
     document.getElementById("OngletCookie").style.display = "block";
     document.getElementById("OngletRebirth").style.display = "none";
     document.getElementById("OngletShop").style.display = "none";
+    UpdateBoost()
 }
 function OngletShop(){
     document.getElementById("OngletCookie").style.display = "none";
@@ -259,11 +267,15 @@ function OngletShop(){
 }
 
 function overall_cookiesP(){
-    overall_cookiesPa +=  Money_par_s
+    overall_cookiesPa +=  Money_par_s/10
 }
 
 function overall_cookiesClick(){
     overall_cookiesClicks += valeur_clic
+}
+
+function CalculBoost(){
+    overall_boost = overall_Cookie_Point * 0.1;
 }
 
 function overall_cookies_calcul(){
@@ -271,37 +283,45 @@ function overall_cookies_calcul(){
 }
 
 function calculerCookiePointsPotentiels() {
-    return Math.floor(overall_cookies / 1000); // Exemple
+    return Math.floor(overall_cookies / (1000 * (1.01 ** overall_Cookie_Point))); // Exemple
 }
 // === Rebirth ===
 
 function Rebirth() {
     // Calcul d'abord
-    Cookie_point = overall_cookies / (10000 * 1.01 ** overall_Cookie_Point);
-    overall_Cookie_Point += Cookie_point;
-    overall_boost = overall_Cookie_Point * 0.1;
+    Cookie_point = calculerCookiePointsPotentiels();
+    if (Cookie_point >= 1){
+        overall_Cookie_Point += Cookie_point;
 
-    // Puis reset
-    money = 0;
-    Rebirth_Counter += 1;
-    four_bonus = 1;
-    robot_bonus = 1;
-    usine_bonus = 1;
-    mamie_bonus = 1;
-    Four.n = 0;
-    Four.valeurC = 15;
-    Robot.n = 0;
-    Robot.valeurC = 10000;
-    Robot.stock = 0;
-    Usine.n = 0;
-    Usine.valeurC = 1000000;
-    Usine.stock = 0;
-    Mamie.n = 0;
-    Mamie.valeurC = 1000000000;
-    Mamie.stock = 0;
-    overall_cookies = 0;
+        // Puis reset
+        money = 0;
+        Rebirth_Counter += 1;
+        four_bonus = 0;
+        robot_bonus = 0;
+        usine_bonus = 0;
+        mamie_bonus = 0;
+        Four.n = 0;
+        Four.valeurC = 15;
+        Robot.n = 0;
+        Robot.valeurC = 10000;
+        Robot.stock = 0;
+        Usine.n = 0;
+        Usine.valeurC = 1000000;
+        Usine.stock = 0;
+        Mamie.n = 0;
+        Mamie.valeurC = 1000000000;
+        Mamie.stock = 0;
+        overall_cookies = 0;
+        const pointsPotentiels = calculerCookiePointsPotentiels();
+        valeur_clic = valeur_clic*(1+(overall_boost/100))
+        document.getElementById("cookiePointsPotentiels").innerText = "Cookie Point potentiels : " + pointsPotentiels;
+        document.getElementById("OverallCookieDisplay").innerText = "Cookie Totaux : " + formater(overall_cookies.toFixed(2))
+        document.getElementById("cookiePoints").innerText = "Cookie Points : " + overall_Cookie_Point.toFixed(2);
+    } else {
+        confirm("Il faut au minimun 1 cookie point pour pouvoir Rebirth !")
+    }
 
-    document.getElementById("cookiePoints").innerText = "Cookie Points : " + overall_Cookie_Point.toFixed(2);
+    UpdateBoost()
     
 }
 
@@ -384,16 +404,16 @@ function resetPartie() {
 
         // Réinitialiser les variables principales
         money = 0;
-        overall_boost = 1;
+        overall_boost = 0;
         Cookie_point = 0;
         overall_cookies = 0;
         overall_cookiesClicks = 0;
         overall_cookiesPa = 0;
         Rebirth_Counter = 0;
-        four_bonus = 1;
-        robot_bonus = 1;
-        usine_bonus = 1;
-        mamie_bonus = 1;
+        four_bonus = 0;
+        robot_bonus = 0;
+        usine_bonus = 0;
+        mamie_bonus = 0;
 
         // Réinitialiser les objets
         Four.n = 0;
@@ -432,4 +452,5 @@ window.onload = () => {
     UpdateCPS();
     UpdateCPC();
     updateBoutons();
+    UpdateBoost()
 };
