@@ -16,7 +16,8 @@ let four_bonus = 0;
 let robot_bonus = 0;
 let usine_bonus = 0;
 let mamie_bonus = 0;
-let price_multiplicator = 1.024;
+let price_multiplicator = 1.017;
+
 let multiplicateurRevenus = 1;
 let reductionPrix = 1;
 let justRebirthed = false;
