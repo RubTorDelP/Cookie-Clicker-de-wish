@@ -41,7 +41,6 @@ div{
 #cookie{
     margin-left: 50%;
     margin-right: 50%;
-    filter: grayscale(100%);
 }
 
 #cookie.niveau1{
