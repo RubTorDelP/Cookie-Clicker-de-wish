@@ -86,7 +86,8 @@ button{
     border: 0;
     background-color: rgba(255, 0, 0, 0.452);
     width: 18vw;
-    height: 7vh;
+    height: auto;
+    min-height: 7vh;
 }
 
 button:hover{

@@ -7,14 +7,21 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <audio id="musiqueFond" src="assets/october-rose-27659.mp3" loop autoplay></audio>
+
+    <script>
+        const musiqueFond = document.getElementById("musiqueFond");
+    musiqueFond.volume = 0.5    ; 
+    </script>
+
     <div id="title" style="display: flex; justify-content: space-between; align-items: center;">
-        <button style="background-color: rgb(86, 126, 160); padding: 5px; margin-top: -30px;" onclick="OngletCookie()">
+        <button style="background-color: rgb(86, 126, 160); padding: 5px; margin-top: -12px;" onclick="OngletCookie()">
             <img src="assets/Cookie_Icon.png" alt="" style="height: 10dvh; width: auto;">
         </button>
-        <button onclick="OngletRebirth()" style="background-color: rgb(86, 126, 160); color: rgb(86, 126, 160); padding: 5px; margin-top: -30px;">
+        <button onclick="OngletRebirth()" style="background-color: rgb(86, 126, 160); color: rgb(86, 126, 160); padding: 5px; margin-top: -12px;">
             <img src="assets/Rebirth icon.png" alt="" style="height: 10dvh; width: auto;">
         </button>
-        <button style="background-color: rgb(86, 126, 160); color: rgb(86, 126, 160); padding: 5px; margin-top: -30px;" onclick="OngletShop()">
+        <button style="background-color: rgb(86, 126, 160); color: rgb(86, 126, 160); padding: 5px; margin-top: -12px;" onclick="OngletShop()">
             <img src="assets/Store-Icon.png" style="height: 10dvh; width: auto;">
         </button>
         <button style="background-color: rgb(86, 126, 160); color: rgb(86, 126, 160); padding: 5px;" onclick="sauvegarderPartie()">
@@ -29,7 +36,6 @@
             <div id="Div_Score"><p id="Score">0$</p></div>
             <div id="ClicValue">Valeur de clic : ?</div>
             <div id="CPS">Revenu Passif : 0</div>
-            <div id="CookieStatus">Cookie Actuel : Cookie Miteux</div>
             <div id="boost">Boost Actuel : 0%</div>
             <div>
             </div>
@@ -68,16 +74,38 @@
                 <div>
                     <button onclick="Rebirth()">Rebirth</button>
                 </div>
+                <div>
+                    <h1>____________________________________________________________________________________________________________________________________________________________________________________________</h1>
+                </div>
+                <div>
+                    <h2>--- Améliorations avec Cookie Point ---</h2>
+                </div>
                 <div id="CookiePointShop"></div>
                 <div id="AméliorationFin"></div>
             </div>
         </section>
     </div>
     <div id="OngletShop" style="display: none;">
-        
+        <section id="game_display_rebirth">
+            <div style="display: flex; flex-direction: column;">
+                <h1 style="font:bolder;">--- Améliorations ---</h1>
+                <div id="Upgrades"></div>
+            </div>
+        </section>
     </div>
 <h2 id="autosave">Sauvegarde automatique à ...</h2>
     <div id="Coo"></div>
+    <audio id="clickSound" src="assets/cash-register-kaching-sound-effect-125042.mp3" preload="auto"></audio>
+    <audio src="assets/sharp-pop-328170.mp3" id="clickSound2"></audio>
+    <script>
+        const sonClick = document.getElementById('clickSound');
+        document.querySelectorAll('button').forEach(btn => {
+        btn.addEventListener('click', () => {
+            sonClick.currentTime = 0;  // Pour rejouer instantanément si clics rapides
+            sonClick.play();
+        });
+        });
+    </script>
 <script src="script.js"></script>
 </body>
 </html>
