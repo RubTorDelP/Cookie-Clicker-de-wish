@@ -70,6 +70,8 @@ const Four = {
             this.n += 1;
             money -= this.valeurC;
             UpdateScore();
+        } else {
+            alert("Pas assez d'argent !");
         }
     }
 };
@@ -95,6 +97,8 @@ const Robot = {
             money -= this.valeurC;
             Four.n -= this.valeur_a;
             UpdateScore();
+        } else {
+            alert("Pas assez d'argent ou de Four !");
         }
     },
     
@@ -134,6 +138,8 @@ const Usine = {
             money -= this.valeurC;
             Robot.n -= this.valeur_a;
             UpdateScore();
+        } else{
+            alert("Pas assez d'argent ou de Robot !");
         }
     },
 
@@ -172,6 +178,8 @@ const Mamie = {
             money -= this.valeurC;
             Usine.n -= this.valeur_a;
             UpdateScore();
+        } else {
+            alert("Pas assez d'argent ou d'Usine !");
         }
     },
 
