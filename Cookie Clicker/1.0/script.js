@@ -1115,10 +1115,20 @@ function afficherAmeliorations() {
         btn.id = am.id;
         btn.innerText = `${am.nom}\n${am.description}\nCoût : ${formater(am.cout)}$`;
         btn.onclick = () => acheterAmelioration(am.id);
+
+        // Changer la couleur du texte si le joueur n'a pas assez d'argent
+        if (money < am.cout) {
+            btn.style.color = "gray"; // texte gris
+        } else {
+            btn.style.color = "black"; // texte normal
+        }
+
         shopDiv.appendChild(btn);
         shopDiv.appendChild(document.createElement("br"));
     });
 }
+
+
 
 
 function acheterAmelioration(id) {

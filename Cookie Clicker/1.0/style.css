@@ -20,6 +20,8 @@ div{
     display: flex;
     flex-direction: column;
     width: 90%;
+    height: 75vh;
+    margin-top: 20px;
     margin-left: 5%;
     background-color: antiquewhite;
     justify-content: center;
@@ -31,6 +33,8 @@ div{
     display: flex;
     flex-direction: column;
     width: 90%;
+    height: 75vh;
+    margin-top: 20px;
     margin-left: 5%;
     background-color: antiquewhite;
     justify-content: center;
